@@ -16,15 +16,25 @@ export class ProductCardComponent {
 
   constructor(private router: Router) {}
 
+  /**
+   * Handle click on the card by routing to the product detail page.
+   */
   onCardClick() {
     this.router.navigate(['/product', this.product.id]);
   }
 
+  /**
+   * Emit an add-to-cart event when the button is clicked. Stop
+   * propagation so the card click handler does not fire.
+   */
   onAddToCart(event: Event) {
     event.stopPropagation();
     this.addToCart.emit(this.product);
   }
 
+  /**
+   * Convert a tag name to a material color string for badge styling.
+   */
   getTagColor(tag: string): string {
     switch (tag) {
       case 'under-999':

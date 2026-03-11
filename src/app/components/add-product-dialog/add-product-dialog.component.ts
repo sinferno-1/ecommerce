@@ -34,12 +34,18 @@ export class AddProductDialogComponent {
   /**
    * Close dialog returning form value to caller.
    */
+  /**
+   * Close the dialog returning the form data if validation passes.
+   */
   save() {
     if (this.productForm.valid) {
       this.dialogRef.close(this.productForm.value);
     }
   }
 
+  /**
+   * Dismiss the dialog without returning data.
+   */
   cancel() {
     this.dialogRef.close();
   }

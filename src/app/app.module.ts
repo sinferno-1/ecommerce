@@ -1,3 +1,7 @@
+// app.module.ts
+// Root application module which pulls together all components,
+// services, routing and Angular Material imports required by the app.
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';

@@ -17,6 +17,10 @@ export class CartComponent implements OnInit {
 
   constructor(private cartService: CartService) {}
 
+  /**
+   * Subscribe to cart observable on init and recalc totals whenever
+   * the cart updates.
+   */
   ngOnInit() {
     this.cartService.cartItems$.subscribe(items => {
       this.cartItems = items;
@@ -24,16 +28,26 @@ export class CartComponent implements OnInit {
     });
   }
 
+  /**
+   * Forward quantity change requests to CartService; ignores zeros.
+   */
   updateQuantity(productId: number, quantity: number) {
     if (quantity > 0) {
       this.cartService.updateQuantity(productId, quantity);
     }
   }
 
+  /**
+   * Remove a product from the cart completely.
+   */
   removeItem(productId: number) {
     this.cartService.removeFromCart(productId);
   }
 
+  /**
+   * Recompute subtotal, shipping charge and grand total. Shipping is
+   * free above a threshold amount.
+   */
   calculateTotals() {
     this.subtotal = this.cartService.getTotal();
     this.shipping = this.subtotal > 5000 ? 0 : 500; // Free shipping over ₹5000

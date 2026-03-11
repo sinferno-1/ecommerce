@@ -55,6 +55,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
    * Open dialog allowing user to enter new product details.
    * After successful creation we append to list and refresh filters.
    */
+  /**
+   * Show the dialog where the user can input details for a new product.
+   * When the dialog closes with data we attempt to add the item and
+   * update the list (or fall back to a locally-constructed product).
+   */
   openAddProductDialog() {
     const dialogRef = this.dialog.open(AddProductDialogComponent, {
       width: '400px'
@@ -105,11 +110,19 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Lifecycle hook called when component is torn down. Notify
+   * subscribers to clean up any RxJS subscriptions.
+   */
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
+  /**
+   * Fetch category list from service and map them to human-friendly
+   * labels used in the filter chips.
+   */
   loadCategories() {
     this.productService.getCategories().subscribe({
       next: (categories) => {
@@ -121,6 +134,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Retrieve products (including any locally added ones) and apply
+   * the currently selected filters so that UI can render page 1.
+   */
   loadProducts() {
     this.loading = true;
     this.error = null;
@@ -137,6 +154,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Wire up the search text field so that typing is debounced before
+   * triggering the filter logic to reduce frequent recalculations.
+   */
   setupSearchDebounce() {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
@@ -147,10 +168,17 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Called when the sort dropdown value changes; just recompute filters.
+   */
   onSortChange() {
     this.applyFilters();
   }
 
+  /**
+   * Toggle a category chip when clicked. Adds/removes from the
+   * selectedCategories array then reapplies filters.
+   */
   onCategoryToggle(category: string) {
     const index = this.selectedCategories.indexOf(category);
     if (index > -1) {
@@ -161,18 +189,33 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
+  /**
+   * Called when the min/max price inputs change; triggers filtering.
+   */
   onPriceChange() {
     this.applyFilters();
   }
 
+  /**
+   * Update filters after the rating selector changes.
+   */
   onRatingChange() {
     this.applyFilters();
   }
 
+  /**
+   * Checkbox toggle for showing only in-stock items; re-evaluates
+   * the filtered results when toggled.
+   */
   onInStockChange() {
     this.applyFilters();
   }
 
+  /**
+   * Core filtering routine. Takes the full products array and applies
+   * search text, category, price, rating, and stock filters, then
+   * sorts and paginates the resulting list for display.
+   */
   applyFilters() {
     const searchTerm = this.searchControl.value?.toLowerCase() || '';
     let filtered = this.products.filter(product => {

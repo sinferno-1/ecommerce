@@ -25,6 +25,10 @@ export class ProductDetailComponent implements OnInit {
     private cartService: CartService
   ) {}
 
+  /**
+   * Retrieve product id from route parameters and load details on
+   * component initialization.
+   */
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -32,6 +36,10 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * Fetch a single product by id and set up related products once
+   * the main product is received.
+   */
   loadProduct(id: number) {
     this.loading = true;
     this.error = null;
@@ -48,6 +56,10 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Request products within the same category and store a small subset
+   * for display as suggestions on the PDP.
+   */
   loadRelatedProducts(category: string) {
     this.productService.getProductsByCategory(category).subscribe({
       next: (products) => {
@@ -59,18 +71,28 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Increment the selected quantity (capped at a maximum of 5).
+   */
   increaseQuantity() {
     if (this.quantity < 5) {
       this.quantity++;
     }
   }
 
+  /**
+   * Decrement the quantity, ensuring it stays at least 1.
+   */
   decreaseQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
     }
   }
 
+  /**
+   * Add the currently viewed product to the cart the specified number
+   * of times, then reset quantity selector.
+   */
   addToCart() {
     if (this.product) {
       for (let i = 0; i < this.quantity; i++) {
@@ -81,10 +103,17 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * Navigate back to the product listing page.
+   */
   goBack() {
     this.router.navigate(['/products']);
   }
 
+  /**
+   * Return a material color based on the tag string to colour-code
+   * badge chips.
+   */
   getTagColor(tag: string): string {
     switch (tag) {
       case 'under-999':

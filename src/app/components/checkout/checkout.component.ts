@@ -37,6 +37,11 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
+  /**
+   * Initialize form/page depending on whether we are rendering the
+   * success screen or the interactive checkout. On checkout we also
+   * watch the cart and redirect if it becomes empty.
+   */
   ngOnInit() {
     this.isSuccessPage = this.route.snapshot.url.some(segment => segment.path === 'success');
 
@@ -54,16 +59,27 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
+  /**
+   * Compute billing totals used in summary panels. Applies same free
+   * shipping threshold as CartComponent.
+   */
   calculateTotals() {
     this.subtotal = this.cartService.getTotal();
     this.shipping = this.subtotal > 5000 ? 0 : 500;
     this.total = this.subtotal + this.shipping;
   }
 
+  /**
+   * Simple navigation helper used on success page to return to PLP.
+   */
   continueShopping() {
     this.router.navigate(['/products']);
   }
 
+  /**
+   * Handler for the checkout form submit. Generates a fake order id,
+   * clears the cart, and transitions to the success route.
+   */
   onSubmit() {
     if (this.checkoutForm.valid) {
       // Create mock order id
