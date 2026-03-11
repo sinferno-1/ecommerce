@@ -12,6 +12,7 @@ import { ProductDetailComponent } from './components/product-detail/product-deta
 import { CartComponent } from './components/cart/cart.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
+import { AddProductDialogComponent } from './components/add-product-dialog/add-product-dialog.component';
 
 // Angular Material
 import { MatCardModule } from '@angular/material/card';
@@ -40,7 +41,8 @@ import { MatDividerModule } from '@angular/material/divider';
     ProductDetailComponent,
     CartComponent,
     CheckoutComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    AddProductDialogComponent
   ],
   imports: [
     BrowserModule,

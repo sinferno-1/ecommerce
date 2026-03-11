@@ -5,6 +5,10 @@
   flex-wrap: wrap;
   align-items: flex-end;
 
+  button {
+    height: 36px;
+  }
+
   mat-form-field {
     min-width: 200px;
   }

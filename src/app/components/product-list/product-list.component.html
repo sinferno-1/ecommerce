@@ -1,5 +1,7 @@
 <div class="container">
+  <!-- toolbar containing search, sort, filter and add-product button -->
   <div class="filters">
+    <button mat-raised-button color="accent" (click)="openAddProductDialog()">Add Product</button>
     <mat-form-field>
       <mat-label>Search</mat-label>
       <input matInput [formControl]="searchControl" placeholder="Search products...">

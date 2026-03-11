@@ -1,3 +1,6 @@
+// product-detail.component.ts
+// Shows detailed information about a single product (PDP).
+// Includes quantity selector, related items and add-to-cart logic.
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, Product } from '../../services/product.service';

@@ -1,4 +1,5 @@
 <div class="container">
+  <!-- checkout page shows form or success message depending on state -->
   <div *ngIf="isSuccessPage; else checkoutTemplate">
     <mat-card class="success-card">
       <mat-card-content>

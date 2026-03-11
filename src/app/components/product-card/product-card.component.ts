@@ -1,3 +1,6 @@
+// product-card.component.ts
+// Reusable card component used in lists to represent a product.
+// Emits addToCart events and navigates to the PDP when clicked.
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product } from '../../services/product.service';

@@ -1,3 +1,6 @@
+// checkout.component.ts
+// Handles the checkout process and order success page. Uses a reactive
+// form for capturing user address details and shows summary of items.
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';

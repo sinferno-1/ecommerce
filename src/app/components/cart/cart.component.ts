@@ -1,3 +1,6 @@
+// cart.component.ts
+// Displays items in the shopping cart along with quantity controls,
+// pricing summary, and navigation actions.
 import { Component, OnInit } from '@angular/core';
 import { CartService, CartItem } from '../../services/cart.service';
 

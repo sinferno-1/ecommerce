@@ -1,10 +1,17 @@
+// product-list.component.ts
+// Displays the main product listing page (PLP) with filters, sorting,
+// pagination and an "Add Product" button. Handles interactions with
+// ProductService and aggregates filter state.
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ProductService, Product } from '../../services/product.service';
+import { ProductService, Product, USD_TO_INR } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { AddProductDialogComponent } from '../add-product-dialog/add-product-dialog.component';
+
 
 @Component({
   selector: 'app-product-list',
@@ -12,6 +19,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./product-list.component.scss']
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+  // holds products fetched from API + locally added
   products: Product[] = [];
   filteredProducts: Product[] = [];
   paginatedProducts: Product[] = [];
@@ -33,13 +41,68 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private cartService: CartService
+    private cartService: CartService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.loadCategories();
     this.loadProducts();
     this.setupSearchDebounce();
+  }
+
+  /**
+   * Open dialog allowing user to enter new product details.
+   * After successful creation we append to list and refresh filters.
+   */
+  openAddProductDialog() {
+    const dialogRef = this.dialog.open(AddProductDialogComponent, {
+      width: '400px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Dialog result', result);
+        // POST to server via service
+        this.productService.addProduct(result).subscribe({
+          next: (p) => {
+            console.log('Product added', p);
+            this.products.unshift(p);
+            // ensure category chip is available
+            if (!this.categories.includes(p.mappedCategory)) {
+              this.categories.push(p.mappedCategory);
+            }
+            this.applyFilters();
+          },
+          error: (err) => {
+            console.error('Failed to add product via API, saving locally', err);
+            // fallback: create a local product object ourselves
+            const fallback: Product = {
+              id: Date.now(), // temporary id
+              price: result.price,
+              priceInr: Math.round(result.price * USD_TO_INR),
+              mrp: Math.round(Math.round(result.price * USD_TO_INR) * 1.2),
+              discount: 0,
+              title: result.title,
+              description: result.description,
+              category: result.category,
+              mappedCategory: this.mapCategory(result.category),
+              image: result.image,
+              rating: { rate: 0, count: 0 },
+              tags: [],
+              inStock: true
+            };
+            this.products.unshift(fallback);
+            if (!this.categories.includes(fallback.mappedCategory)) {
+              this.categories.push(fallback.mappedCategory);
+            }
+            this.applyFilters();
+            // also save locally
+            this.productService.addLocalProduct(fallback);
+          }
+        });
+      }
+    });
   }
 
   ngOnDestroy() {

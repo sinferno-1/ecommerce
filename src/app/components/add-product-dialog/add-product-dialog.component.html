@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Add New Product</h2>
+<!-- form collects minimal product details for API post -->
+<mat-dialog-content [formGroup]="productForm">
+  <mat-form-field>
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Price (USD)</mat-label>
+    <input matInput type="number" formControlName="price" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Category</mat-label>
+    <input matInput formControlName="category" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Image URL</mat-label>
+    <input matInput formControlName="image" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="save()" [disabled]="!productForm.valid">Save</button>
+</mat-dialog-actions>

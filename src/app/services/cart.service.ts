@@ -1,3 +1,6 @@
+// cart.service.ts
+// Manages the shopping cart state using a BehaviorSubject. Persists
+// the cart to localStorage so that it survives page reloads.
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from './product.service';

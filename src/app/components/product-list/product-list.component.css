@@ -6,6 +6,10 @@
   align-items: flex-end;
 }
 
+.filters button {
+  height: 36px;
+}
+
 .filters mat-form-field {
   min-width: 200px;
 }
