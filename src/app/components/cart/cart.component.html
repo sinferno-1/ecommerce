@@ -1,0 +1,57 @@
+<div class="container">
+  <h1>Shopping Cart</h1>
+
+  <div *ngIf="cartItems.length === 0" class="empty-cart">
+    <p>Your cart is empty.</p>
+    <button mat-raised-button color="primary" routerLink="/products">Continue Shopping</button>
+  </div>
+
+  <div *ngIf="cartItems.length > 0">
+    <mat-card *ngFor="let item of cartItems" class="cart-item">
+      <mat-card-content>
+        <div class="item-content">
+          <img [src]="item.product.image" [alt]="item.product.title" class="item-image" />
+          <div class="item-details">
+            <h3>{{ item.product.title }}</h3>
+            <p>₹{{ item.product.priceInr }}</p>
+          </div>
+          <div class="quantity-controls">
+            <button mat-icon-button (click)="updateQuantity(item.product.id, item.quantity - 1)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{ item.quantity }}</span>
+            <button mat-icon-button (click)="updateQuantity(item.product.id, item.quantity + 1)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <div class="item-total">
+            <p>₹{{ (item.product.priceInr * item.quantity) }}</p>
+          </div>
+          <button mat-icon-button color="warn" (click)="removeItem(item.product.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="cart-summary">
+      <mat-card-content>
+        <div class="summary-row">
+          <span>Subtotal:</span>
+          <span>₹{{ subtotal }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping:</span>
+          <span>₹{{ shipping }}</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total:</span>
+          <span>₹{{ total }}</span>
+        </div>
+        <button mat-raised-button color="primary" routerLink="/checkout" class="checkout-btn">
+          Proceed to Checkout
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

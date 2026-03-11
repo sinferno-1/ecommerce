@@ -1,0 +1,81 @@
+<div class="container">
+  <div class="filters">
+    <mat-form-field>
+      <mat-label>Search</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Search products...">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Sort by</mat-label>
+      <mat-select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+        <mat-option value="recommended">Recommended</mat-option>
+        <mat-option value="price-low">Price: Low to High</mat-option>
+        <mat-option value="price-high">Price: High to Low</mat-option>
+        <mat-option value="rating">Rating</mat-option>
+        <mat-option value="newest">Newest</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <div class="price-filters">
+      <mat-form-field>
+        <mat-label>Min Price (₹)</mat-label>
+        <input matInput type="number" [(ngModel)]="minPrice" (ngModelChange)="onPriceChange()" placeholder="0">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Max Price (₹)</mat-label>
+        <input matInput type="number" [(ngModel)]="maxPrice" (ngModelChange)="onPriceChange()" placeholder="No limit">
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Min Rating</mat-label>
+      <mat-select [(ngModel)]="ratingFilter" (ngModelChange)="onRatingChange()">
+        <mat-option [value]="null">Any</mat-option>
+        <mat-option value="4">4+</mat-option>
+        <mat-option value="3">3+</mat-option>
+        <mat-option value="2">2+</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-checkbox [(ngModel)]="inStockOnly" (change)="onInStockChange()">In Stock Only</mat-checkbox>
+  </div>
+
+  <div class="category-chips">
+    <mat-chip-set>
+      <mat-chip *ngFor="let category of categories" 
+                [class.selected]="selectedCategories.includes(category)"
+                (click)="onCategoryToggle(category)">
+        {{ category }}
+      </mat-chip>
+    </mat-chip-set>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+
+  <div *ngIf="error" class="error">
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadProducts()">Retry</button>
+  </div>
+
+  <div *ngIf="!loading && !error && filteredProducts.length === 0" class="empty">
+    <p>No products found.</p>
+  </div>
+
+  <div class="products-grid" *ngIf="!loading && !error">
+    <app-product-card
+      *ngFor="let product of paginatedProducts"
+      [product]="product"
+      (addToCart)="onAddToCart($event)">
+    </app-product-card>
+  </div>
+
+  <mat-paginator
+    *ngIf="!loading && !error && filteredProducts.length > 0"
+    [length]="filteredProducts.length"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[6, 12, 18, 24]"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</div>

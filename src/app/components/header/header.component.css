@@ -1,0 +1,21 @@
+:host ::ng-deep mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+:host ::ng-deep .spacer {
+  flex: 1;
+}
+
+:host ::ng-deep button {
+  color: white;
+}
+
+:host ::ng-deep button mat-icon {
+  margin-right: 8px;
+}
+
+:host ::ng-deep .mat-mdc-button-base {
+  color: white;
+}
