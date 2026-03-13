@@ -4,7 +4,7 @@
 // locally added products persisted in localStorage.
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface Product {
@@ -53,10 +53,16 @@ export class ProductService {
   }
 
   /**
-   * Fetch a single product by id from the API, transforming it to our
-   * internal Product type.
+   * Fetch a single product by id. First checks locally added products
+   * (persisted in localStorage). If not found locally, falls back to
+   * the API.
    */
   getProduct(id: number): Observable<Product> {
+    const local = this.getLocalProducts().find(p => p.id === id);
+    if (local) {
+      return of(local);
+    }
+
     return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
       map(product => this.transformProduct(product))
     );
