@@ -15,7 +15,20 @@
   </mat-form-field>
   <mat-form-field>
     <mat-label>Category</mat-label>
-    <input matInput formControlName="category" />
+    <input
+      type="text"
+      matInput
+      formControlName="category"
+      [matAutocomplete]="categoryAuto"
+    />
+    <mat-autocomplete #categoryAuto="matAutocomplete" autoActiveFirstOption>
+      <mat-option *ngFor="let category of filteredCategories" [value]="category">
+        {{ category }}
+      </mat-option>
+    </mat-autocomplete>
+    <mat-hint *ngIf="productForm.get('category')?.value && !categories.includes(productForm.get('category')?.value)">
+      New category will be added
+    </mat-hint>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Image URL</mat-label>
