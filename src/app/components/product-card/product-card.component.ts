@@ -50,10 +50,10 @@ export class ProductCardComponent implements OnInit, OnDestroy {
 
   /**
    * Add product from card and emit event for any outer handler.
+   * Cart mutation is handled by parent to avoid duplicate operations.
    */
   onAddToCart(event: Event) {
     event.stopPropagation();
-    this.cartService.addToCart(this.product, 1);
     this.addToCart.emit(this.product);
   }
 
