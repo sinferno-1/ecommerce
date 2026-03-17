@@ -88,8 +88,50 @@ export class ProductService {
   }
 
 
+  private readonly localCategoriesKey = 'local_categories_v1';
+
+  private getLocalCategories(): string[] {
+    const stored = localStorage.getItem(this.localCategoriesKey);
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        localStorage.removeItem(this.localCategoriesKey);
+      }
+    }
+    return [];
+  }
+
+  private saveLocalCategories(categories: string[]) {
+    localStorage.setItem(this.localCategoriesKey, JSON.stringify(categories));
+  }
+
+  addLocalCategory(category: string) {
+    const normalized = category.trim();
+    if (!normalized) {
+      return;
+    }
+
+    const existing = this.getLocalCategories();
+    if (!existing.some(c => c.toLowerCase() === normalized.toLowerCase())) {
+      const updated = [...existing, normalized];
+      this.saveLocalCategories(updated);
+    }
+  }
+
   getCategories(): Observable<string[]> {
-    return this.http.get<string[]>('https://fakestoreapi.com/products/categories');
+    const localCats = this.getLocalCategories();
+    return this.http.get<string[]>('https://fakestoreapi.com/products/categories').pipe(
+      map(categories => {
+        const merged = [...categories];
+        localCats.forEach(localCat => {
+          if (!merged.some(c => c.toLowerCase() === localCat.toLowerCase())) {
+            merged.push(localCat);
+          }
+        });
+        return merged;
+      })
+    );
   }
 
   getProductsByCategory(category: string): Observable<Product[]> {

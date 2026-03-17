@@ -82,13 +82,18 @@ export class AddProductDialogComponent implements OnInit {
   }
 
   /**
-   * Close dialog returning form value to caller.
+   * Close the dialog returning form value to caller.
    */
   /**
    * Close the dialog returning the form data if validation passes.
    */
   save() {
     if (this.productForm.valid) {
+      const category = this.productForm.get('category')?.value?.trim();
+      if (category && !this.categories.some(c => c.toLowerCase() === category.toLowerCase())) {
+        this.productService.addLocalCategory(category);
+      }
+
       this.dialogRef.close(this.productForm.value);
     }
   }
