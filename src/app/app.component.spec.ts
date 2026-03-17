@@ -4,8 +4,7 @@ import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [RouterTestingModule],
-    declarations: [AppComponent]
+    imports: [AppComponent, RouterTestingModule]
   }));
 
   it('should create the app', () => {
@@ -20,10 +19,11 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('ecommerce-app');
   });
 
-  it('should render title', () => {
+  it('should render header and router outlet', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('ecommerce-app app is running!');
+    expect(compiled.querySelector('app-header')).toBeTruthy();
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

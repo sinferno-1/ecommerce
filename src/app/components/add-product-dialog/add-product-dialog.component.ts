@@ -1,8 +1,12 @@
 // add-product-dialog.component.ts
 // Dialog used to collect details for a new product. Opened from PLP.
 import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 /**
  * Dialog window used by ProductListComponent to collect information
@@ -10,9 +14,18 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  * the user clicks "Save".
  */
 @Component({
+  standalone: true,
   selector: 'app-add-product-dialog',
   templateUrl: './add-product-dialog.component.html',
-  styleUrls: ['./add-product-dialog.component.scss']
+  styleUrls: ['./add-product-dialog.component.scss'],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ]
 })
 export class AddProductDialogComponent {
   productForm: FormGroup;

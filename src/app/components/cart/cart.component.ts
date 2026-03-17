@@ -2,12 +2,19 @@
 // Displays items in the shopping cart along with quantity controls,
 // pricing summary, and navigation actions.
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { CartService, CartItem } from '../../services/cart.service';
 
 @Component({
+  standalone: true,
   selector: 'app-cart',
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.scss']
+  styleUrls: ['./cart.component.scss'],
+  imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule, MatIconModule]
 })
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];

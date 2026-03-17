@@ -117,6 +117,32 @@
   padding: 10px;
 }
 
+.product-card mat-card-actions .quantity-controller {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.product-card mat-card-actions .quantity-controller button {
+  width: auto;
+  min-width: 36px;
+  min-height: 36px;
+}
+
+.product-card mat-card-actions .quantity-controller span {
+  font-weight: bold;
+  font-size: 16px;
+  min-width: 30px;
+  text-align: center;
+}
+
+.product-card mat-card-actions .quantity-controller > button[mat-button] {
+  width: 100%;
+}
+
 .product-card button {
   width: 100%;
 }

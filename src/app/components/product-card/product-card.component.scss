@@ -116,6 +116,31 @@
 
   mat-card-actions {
     padding: 10px;
+    .quantity-controller {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+
+      button {
+        width: auto;
+        min-width: 36px;
+        min-height: 36px;
+      }
+
+      span {
+        font-weight: bold;
+        font-size: 16px;
+        min-width: 30px;
+        text-align: center;
+      }
+
+      > button[mat-button] {
+        width: 100%;
+      }
+    }
   }
 
   button {

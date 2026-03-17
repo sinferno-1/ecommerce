@@ -23,8 +23,25 @@
     </div>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button color="primary" (click)="onAddToCart($event)" [disabled]="!product.inStock">
-      Add to Cart
-    </button>
+    <ng-container *ngIf="!inCart">
+      <button mat-raised-button color="primary" (click)="onAddToCart($event)" [disabled]="!product.inStock">
+        Add to Cart
+      </button>
+    </ng-container>
+
+    <ng-container *ngIf="inCart">
+      <div class="quantity-controller" (click)="$event.stopPropagation()">
+        <button mat-icon-button color="primary" (click)="updateQuantity($event, quantity - 1)" [disabled]="quantity <= 1">
+          <mat-icon>remove</mat-icon>
+        </button>
+        <span>{{ quantity }}</span>
+        <button mat-icon-button color="primary" (click)="updateQuantity($event, quantity + 1)">
+          <mat-icon>add</mat-icon>
+        </button>
+        <button mat-button color="warn" (click)="removeFromCart($event)">
+          Remove
+        </button>
+      </div>
+    </ng-container>
   </mat-card-actions>
 </mat-card>
