@@ -1,0 +1,8 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["angular.json"],
+      "url": "./node_modules/@angular/cli/lib/config/schema.json"
+    }
+  ]
+}
