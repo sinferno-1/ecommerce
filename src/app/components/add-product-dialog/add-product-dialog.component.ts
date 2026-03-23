@@ -19,19 +19,19 @@ import { debounceTime, startWith, map } from 'rxjs/operators';
  * the user clicks "Save".
  */
 @Component({
-  standalone: true,
-  selector: 'app-add-product-dialog',
-  templateUrl: './add-product-dialog.component.html',
-  styleUrls: ['./add-product-dialog.component.scss'],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatAutocompleteModule
-  ]
+    selector: 'app-add-product-dialog',
+    templateUrl: './add-product-dialog.component.html',
+    styleUrls: ['./add-product-dialog.component.scss'],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatAutocompleteModule
+    ],
+    standalone: true,
 })
 export class AddProductDialogComponent implements OnInit {
   productForm: FormGroup;

@@ -24,25 +24,24 @@ import { AddProductDialogComponent } from '../add-product-dialog/add-product-dia
 
 
 @Component({
-  standalone: true,
-  selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.scss'],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatCheckboxModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatPaginatorModule,
-    ProductCardComponent
-  ]
+    selector: 'app-product-list',
+    templateUrl: './product-list.component.html',
+    styleUrls: ['./product-list.component.scss'],
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatCheckboxModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatPaginatorModule,
+        ProductCardComponent
+    ]
 })
 export class ProductListComponent implements OnInit, OnDestroy {
   // holds products fetched from API + locally added

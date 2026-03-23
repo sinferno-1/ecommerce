@@ -10,18 +10,17 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { CartService } from '../../services/cart.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatBadgeModule
-  ]
+    selector: 'app-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatBadgeModule
+    ]
 })
 export class HeaderComponent implements OnInit {
   itemCount = 0;

@@ -14,19 +14,18 @@ import { MatChipsModule } from '@angular/material/chips';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
 @Component({
-  standalone: true,
-  selector: 'app-product-detail',
-  templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.scss'],
-  imports: [
-    CommonModule,
-    MatProgressSpinnerModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    MatChipsModule,
-    ProductCardComponent
-  ]
+    selector: 'app-product-detail',
+    templateUrl: './product-detail.component.html',
+    styleUrls: ['./product-detail.component.scss'],
+    imports: [
+        CommonModule,
+        MatProgressSpinnerModule,
+        MatButtonModule,
+        MatIconModule,
+        MatCardModule,
+        MatChipsModule,
+        ProductCardComponent
+    ]
 })
 export class ProductDetailComponent implements OnInit {
   product: Product | null = null;

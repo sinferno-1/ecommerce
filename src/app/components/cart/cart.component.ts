@@ -10,11 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { CartService, CartItem } from '../../services/cart.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-cart',
-  templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.scss'],
-  imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule, MatIconModule]
+    selector: 'app-cart',
+    templateUrl: './cart.component.html',
+    styleUrls: ['./cart.component.scss'],
+    imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule, MatIconModule]
 })
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];

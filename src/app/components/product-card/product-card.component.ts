@@ -13,11 +13,10 @@ import { Product } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-product-card',
-  templateUrl: './product-card.component.html',
-  styleUrls: ['./product-card.component.scss'],
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatChipsModule]
+    selector: 'app-product-card',
+    templateUrl: './product-card.component.html',
+    styleUrls: ['./product-card.component.scss'],
+    imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatChipsModule]
 })
 export class ProductCardComponent implements OnInit, OnDestroy {
   @Input() product!: Product;
