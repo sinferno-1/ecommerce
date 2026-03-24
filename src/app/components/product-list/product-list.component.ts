@@ -2,7 +2,7 @@
 // Displays the main product listing page (PLP) with filters, sorting,
 // pagination and an "Add Product" button. Handles interactions with
 // ProductService and aggregates filter state.
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageEvent } from '@angular/material/paginator';
 import { ProductService, Product, USD_TO_INR } from '../../services/product.service';
@@ -48,6 +48,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   private productService = inject(ProductService);
   private cartService = inject(CartService);
   private dialog = inject(MatDialog);
+  private cdr = inject(ChangeDetectorRef);
 
   // holds products fetched from API + locally added
   products: Product[] = [];
@@ -102,6 +103,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
               this.categories.push(p.mappedCategory);
             }
             this.applyFilters();
+            this.cdr.markForCheck();
           },
           error: (err) => {
             console.error('Failed to add product via API, saving locally', err);
@@ -126,6 +128,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
               this.categories.push(fallback.mappedCategory);
             }
             this.applyFilters();
+            this.cdr.markForCheck();
             // also save locally
             this.productService.addLocalProduct(fallback);
           }
@@ -151,6 +154,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.productService.getCategories().subscribe({
       next: (categories) => {
         this.categories = categories.map(cat => this.mapCategory(cat));
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Failed to load categories', err);
@@ -170,11 +174,13 @@ export class ProductListComponent implements OnInit, OnDestroy {
         this.products = products;
         this.applyFilters();
         this.loading = false;
+        this.cdr.markForCheck();
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       error: (err) => {
         this.error = 'Failed to load products. Please try again.';
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

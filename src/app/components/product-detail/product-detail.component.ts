@@ -1,7 +1,7 @@
 // product-detail.component.ts
 // Shows detailed information about a single product (PDP).
 // Includes quantity selector, related items and add-to-cart logic.
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, Product } from '../../services/product.service';
@@ -33,6 +33,7 @@ export class ProductDetailComponent implements OnInit {
   private router = inject(Router);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private cdr = inject(ChangeDetectorRef);
 
   product: Product | null = null;
   relatedProducts: Product[] = [];
@@ -63,10 +64,12 @@ export class ProductDetailComponent implements OnInit {
         this.product = product;
         this.loadRelatedProducts(product.category);
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.error = 'Failed to load product. Please try again.';
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -79,6 +82,7 @@ export class ProductDetailComponent implements OnInit {
     this.productService.getProductsByCategory(category).subscribe({
       next: (products) => {
         this.relatedProducts = products.filter(p => p.id !== this.product?.id).slice(0, 4);
+        this.cdr.markForCheck();
       },
       error: (err) => {
         console.error('Failed to load related products', err);
