@@ -1,9 +1,11 @@
 // cart.service.ts
 // Manages the shopping cart state using a BehaviorSubject. Persists
-// the cart to localStorage so that it survives page reloads.
+// the cart to localStorage and syncs with database for logged-in users.
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { Product } from './product.service';
+import { AuthService, User } from './auth.service';
 
 export interface CartItem {
   product: Product;
@@ -16,9 +18,22 @@ export interface CartItem {
 export class CartService {
   private cartItems = new BehaviorSubject<CartItem[]>([]);
   cartItems$ = this.cartItems.asObservable();
+  private apiUrl = 'http://localhost:3000/users';
+  private currentUser: User | null = null;
 
-  constructor() {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {
     this.loadCartFromStorage();
+    // Subscribe to auth changes
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        // Load cart from user data when they log in
+        this.loadCartFromUser(user);
+      }
+    });
   }
 
   /**
@@ -39,11 +54,69 @@ export class CartService {
   }
 
   /**
+   * Load cart from user data in database when user logs in
+   */
+  private loadCartFromUser(user: User) {
+    if (user && user.cart && Array.isArray(user.cart)) {
+      // Convert user cart data to CartItem format
+      const cartItems: CartItem[] = user.cart.map(cartItem => ({
+        product: {
+          id: cartItem.productId,
+          title: cartItem.name,
+          price: cartItem.price,
+          priceInr: cartItem.price * 80, // Approximate conversion
+          description: '',
+          category: '',
+          image: cartItem.image,
+          rating: { rate: 0, count: 0 }
+        } as Product,
+        quantity: cartItem.quantity
+      }));
+      this.cartItems.next(cartItems);
+      this.saveCartToStorage();
+    }
+  }
+
+  /**
    * Persist the current cart value to localStorage; called after any
    * mutation so the state survives page refreshes.
    */
   private saveCartToStorage() {
     localStorage.setItem('cart_v1', JSON.stringify(this.cartItems.value));
+  }
+
+  /**
+   * Save cart to database for the current logged-in user
+   */
+  private saveCartToDatabase() {
+    if (!this.currentUser) {
+      return;
+    }
+
+    const cartData = this.cartItems.value.map(item => ({
+      productId: item.product.id,
+      name: item.product.title,
+      price: item.product.price,
+      quantity: item.quantity,
+      image: item.product.image
+    }));
+
+    const updatedUser = {
+      ...this.currentUser,
+      cart: cartData
+    };
+
+    this.http.put(`${this.apiUrl}/${this.currentUser.id}`, updatedUser)
+      .subscribe({
+        next: (response: any) => {
+          // Update local auth state
+          localStorage.setItem('currentUser', JSON.stringify(response));
+          this.authService.updateCurrentUser(response);
+        },
+        error: (error) => {
+          console.error('Failed to save cart to database', error);
+        }
+      });
   }
 
   /**
@@ -64,6 +137,7 @@ export class CartService {
     }
     this.cartItems.next(currentItems);
     this.saveCartToStorage();
+    this.saveCartToDatabase();
   }
 
   /**
@@ -74,6 +148,7 @@ export class CartService {
     const currentItems = this.cartItems.value.filter(item => item.product.id !== productId);
     this.cartItems.next(currentItems);
     this.saveCartToStorage();
+    this.saveCartToDatabase();
   }
 
   /**
@@ -90,6 +165,7 @@ export class CartService {
       } else {
         this.cartItems.next(currentItems);
         this.saveCartToStorage();
+        this.saveCartToDatabase();
       }
     }
   }
@@ -123,5 +199,6 @@ export class CartService {
   clearCart() {
     this.cartItems.next([]);
     this.saveCartToStorage();
+    this.saveCartToDatabase();
   }
 }

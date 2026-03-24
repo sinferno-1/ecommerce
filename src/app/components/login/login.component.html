@@ -1,0 +1,67 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>Login</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" type="text" />
+            <mat-error *ngIf="username?.hasError('required')">
+              Username is required
+            </mat-error>
+            <mat-error *ngIf="username?.hasError('minlength')">
+              Username must be at least 3 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-group">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" />
+            <mat-error *ngIf="password?.hasError('required')">
+              Password is required
+            </mat-error>
+            <mat-error *ngIf="password?.hasError('minlength')">
+              Password must be at least 6 characters
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+
+        <div class="button-group">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loginForm.invalid || loading"
+            class="full-width"
+          >
+            <mat-spinner diameter="20" *ngIf="loading"></mat-spinner>
+            <span *ngIf="!loading">Login</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="signup-prompt">
+        <p>Don't have an account? <a (click)="goToSignup()" class="signup-link">Sign up here</a></p>
+      </div>
+
+      <div class="demo-credentials">
+        <h4>Demo Credentials for Testing:</h4>
+        <ul>
+          <li><strong>Username:</strong> john_doe | <strong>Password:</strong> password123</li>
+          <li><strong>Username:</strong> jane_smith | <strong>Password:</strong> password456</li>
+          <li><strong>Username:</strong> bob_wilson | <strong>Password:</strong> password789</li>
+        </ul>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

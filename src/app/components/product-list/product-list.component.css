@@ -5,24 +5,19 @@
   flex-wrap: wrap;
   align-items: flex-end;
 }
-
 .filters button {
   height: 36px;
 }
-
 .filters mat-form-field {
   min-width: 200px;
 }
-
 .filters .price-filters {
   display: flex;
   gap: 10px;
 }
-
 .filters .price-filters mat-form-field {
   min-width: 120px;
 }
-
 .filters mat-checkbox {
   margin-bottom: 20px;
 }
@@ -30,17 +25,14 @@
 .category-chips {
   margin-bottom: 30px;
 }
-
 .category-chips mat-chip-set {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
-
 .category-chips mat-chip {
   cursor: pointer;
 }
-
 .category-chips mat-chip.selected {
   background-color: #1976d2;
   color: white;
@@ -66,7 +58,6 @@
   border-radius: 4px;
   color: #c62828;
 }
-
 .error button {
   margin-top: 20px;
 }
@@ -92,15 +83,13 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
-
 @media (min-width: 769px) and (max-width: 1024px) {
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
-
 @media (min-width: 1025px) {
   .products-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-}
+}/*# sourceMappingURL=product-list.component.css.map */

@@ -20,4 +20,21 @@
   .mat-mdc-button-base {
     color: white;
   }
+
+  .user-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 16px;
+
+    .user-name {
+      color: white;
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+
+  mat-divider {
+    margin: 8px 0;
+  }
 }

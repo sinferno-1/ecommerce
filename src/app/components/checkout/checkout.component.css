@@ -4,7 +4,6 @@
   max-width: 500px;
   margin: 0 auto;
 }
-
 .success-card .success-icon {
   font-size: 80px;
   width: 80px;
@@ -12,17 +11,14 @@
   color: #4caf50;
   margin: 0 auto 20px;
 }
-
 .success-card h1 {
   color: #4caf50;
   margin-bottom: 20px;
 }
-
 .success-card p {
   margin-bottom: 30px;
   color: #666;
 }
-
 .success-card button {
   margin-top: 20px;
 }
@@ -33,40 +29,34 @@
   gap: 40px;
   margin-top: 20px;
 }
-
 .checkout-content .checkout-form mat-form-field,
 .checkout-content .order-summary mat-form-field {
   width: 100%;
   margin-bottom: 20px;
 }
-
 .checkout-content .checkout-form button,
 .checkout-content .order-summary button {
   width: 100%;
   margin-top: 20px;
 }
-
 .checkout-content .order-summary .summary-item {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #eee;
 }
-
 .checkout-content .order-summary .summary-item .item-info {
   display: flex;
   flex-direction: column;
   gap: 5px;
   flex: 1;
 }
-
 .checkout-content .order-summary .summary-row {
   display: flex;
   justify-content: space-between;
   padding: 12px 0;
   margin-top: 15px;
 }
-
 .checkout-content .order-summary .summary-row.total {
   font-weight: bold;
   font-size: 18px;
@@ -79,4 +69,4 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-}
+}/*# sourceMappingURL=checkout.component.css.map */
