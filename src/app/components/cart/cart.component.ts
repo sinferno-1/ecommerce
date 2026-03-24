@@ -1,7 +1,7 @@
 // cart.component.ts
 // Displays items in the shopping cart along with quantity controls,
 // pricing summary, and navigation actions.
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -11,17 +11,18 @@ import { CartService, CartItem } from '../../services/cart.service';
 
 @Component({
     selector: 'app-cart',
+    standalone: true,
     templateUrl: './cart.component.html',
     styleUrls: ['./cart.component.scss'],
     imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule, MatIconModule]
 })
 export class CartComponent implements OnInit {
+  private cartService = inject(CartService);
+
   cartItems: CartItem[] = [];
   subtotal = 0;
   shipping = 0;
   total = 0;
-
-  constructor(private cartService: CartService) {}
 
   /**
    * Subscribe to cart observable on init and recalc totals whenever
@@ -58,5 +59,9 @@ export class CartComponent implements OnInit {
     this.subtotal = this.cartService.getTotal();
     this.shipping = this.subtotal > 5000 ? 0 : 500; // Free shipping over ₹5000
     this.total = this.subtotal + this.shipping;
+  }
+
+  trackByProductId(index: number, item: CartItem): number {
+    return item.product.id;
   }
 }

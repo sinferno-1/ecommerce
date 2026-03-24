@@ -44,40 +44,52 @@
 
   <div class="category-chips">
     <mat-chip-set>
-      <mat-chip *ngFor="let category of categories" 
-                [class.selected]="selectedCategories.includes(category)"
-                (click)="onCategoryToggle(category)">
-        {{ category }}
-      </mat-chip>
+      @for (category of categories; track category) {
+        <mat-chip
+          [class.selected]="selectedCategories.includes(category)"
+          (click)="onCategoryToggle(category)">
+          {{ category }}
+        </mat-chip>
+      }
     </mat-chip-set>
   </div>
 
-  <div *ngIf="loading" class="loading">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
+  @if (loading) {
+    <div class="loading">
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+  }
 
-  <div *ngIf="error" class="error">
-    <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="loadProducts()">Retry</button>
-  </div>
+  @if (error) {
+    <div class="error">
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="loadProducts()">Retry</button>
+    </div>
+  }
 
-  <div *ngIf="!loading && !error && filteredProducts.length === 0" class="empty">
-    <p>No products found.</p>
-  </div>
+  @if (!loading && !error && filteredProducts.length === 0) {
+    <div class="empty">
+      <p>No products found.</p>
+    </div>
+  }
 
-  <div class="products-grid" *ngIf="!loading && !error">
-    <app-product-card
-      *ngFor="let product of paginatedProducts"
-      [product]="product"
-      (addToCart)="onAddToCart($event)">
-    </app-product-card>
-  </div>
+  @if (!loading && !error) {
+    <div class="products-grid">
+      @for (product of paginatedProducts; track product.id) {
+        <app-product-card
+          [product]="product"
+          (addToCart)="onAddToCart($event)">
+        </app-product-card>
+      }
+    </div>
+  }
 
-  <mat-paginator
-    *ngIf="!loading && !error && filteredProducts.length > 0"
-    [length]="filteredProducts.length"
-    [pageSize]="pageSize"
-    [pageSizeOptions]="[6, 12, 18, 24]"
-    (page)="onPageChange($event)">
-  </mat-paginator>
+  @if (!loading && !error && filteredProducts.length > 0) {
+    <mat-paginator
+      [length]="filteredProducts.length"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[6, 12, 18, 24]"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  }
 </div>

@@ -2,7 +2,7 @@
 // Displays the main product listing page (PLP) with filters, sorting,
 // pagination and an "Add Product" button. Handles interactions with
 // ProductService and aggregates filter state.
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageEvent } from '@angular/material/paginator';
 import { ProductService, Product, USD_TO_INR } from '../../services/product.service';
@@ -25,6 +25,7 @@ import { AddProductDialogComponent } from '../add-product-dialog/add-product-dia
 
 @Component({
     selector: 'app-product-list',
+    standalone: true,
     templateUrl: './product-list.component.html',
     styleUrls: ['./product-list.component.scss'],
     imports: [
@@ -44,6 +45,10 @@ import { AddProductDialogComponent } from '../add-product-dialog/add-product-dia
     ]
 })
 export class ProductListComponent implements OnInit, OnDestroy {
+  private productService = inject(ProductService);
+  private cartService = inject(CartService);
+  private dialog = inject(MatDialog);
+
   // holds products fetched from API + locally added
   products: Product[] = [];
   filteredProducts: Product[] = [];
@@ -63,12 +68,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
   currentPage = 0;
 
   private destroy$ = new Subject<void>();
-
-  constructor(
-    private productService: ProductService,
-    private cartService: CartService,
-    private dialog: MatDialog
-  ) {}
 
   ngOnInit() {
     this.loadCategories();
@@ -172,6 +171,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
         this.applyFilters();
         this.loading = false;
       },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       error: (err) => {
         this.error = 'Failed to load products. Please try again.';
         this.loading = false;
@@ -243,7 +243,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
    */
   applyFilters() {
     const searchTerm = this.searchControl.value?.toLowerCase() || '';
-    let filtered = this.products.filter(product => {
+    const filtered = this.products.filter(product => {
       const matchesSearch = product.title.toLowerCase().includes(searchTerm);
       const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(product.mappedCategory);
       const matchesMinPrice = this.minPrice === null || product.priceInr >= this.minPrice;
@@ -292,7 +292,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   private mapCategory(apiCategory: string): string {
-    const categoryMap: { [key: string]: string } = {
+    const categoryMap: Record<string, string> = {
       'electronics': 'Tech',
       'jewelery': 'Fashion',
       "men's clothing": "Men's Fashion",

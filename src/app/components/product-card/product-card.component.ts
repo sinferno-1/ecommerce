@@ -1,7 +1,7 @@
 // product-card.component.ts
 // Reusable card component used in lists to represent a product.
 // Shows add button when product not in cart, quantity editor when present.
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -14,19 +14,21 @@ import { CartService } from '../../services/cart.service';
 
 @Component({
     selector: 'app-product-card',
+    standalone: true,
     templateUrl: './product-card.component.html',
     styleUrls: ['./product-card.component.scss'],
     imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatChipsModule]
 })
 export class ProductCardComponent implements OnInit, OnDestroy {
+  private router = inject(Router);
+  private cartService = inject(CartService);
+
   @Input() product!: Product;
   @Output() addToCart = new EventEmitter<Product>();
 
   inCart = false;
   quantity = 0;
   private cartSub?: Subscription;
-
-  constructor(private router: Router, private cartService: CartService) {}
 
   ngOnInit() {
     this.cartSub = this.cartService.cartItems$.subscribe(items => {

@@ -1,7 +1,9 @@
 <mat-card class="product-card" (click)="onCardClick()">
   <div class="image-container">
     <img mat-card-image [src]="product.image" [alt]="product.title" />
-    <div class="discount-badge" *ngIf="product.discount > 0">{{ product.discount }}% OFF</div>
+    @if (product.discount > 0) {
+      <div class="discount-badge">{{ product.discount }}% OFF</div>
+    }
     <div class="stock-indicator" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
       {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
     </div>
@@ -10,7 +12,9 @@
     <mat-card-title class="title-clamp">{{ product.title }}</mat-card-title>
     <mat-card-subtitle>
       <span class="price">₹{{ product.priceInr }}</span>
-      <span class="mrp" *ngIf="product.mrp > product.priceInr">₹{{ product.mrp }}</span>
+      @if (product.mrp > product.priceInr) {
+        <span class="mrp">₹{{ product.mrp }}</span>
+      }
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
@@ -18,19 +22,22 @@
       <mat-icon>star</mat-icon>
       <span>{{ product.rating.rate }} ({{ product.rating.count }})</span>
     </div>
-    <div class="tags" *ngIf="product.tags.length > 0">
-      <mat-chip *ngFor="let tag of product.tags" [color]="getTagColor(tag)" selected>{{ tag }}</mat-chip>
-    </div>
+    @if (product.tags.length > 0) {
+      <div class="tags">
+        @for (tag of product.tags; track tag) {
+          <mat-chip [color]="getTagColor(tag)" selected>{{ tag }}</mat-chip>
+        }
+      </div>
+    }
   </mat-card-content>
   <mat-card-actions>
-    <ng-container *ngIf="!inCart">
-      <button mat-raised-button color="primary" (click)="onAddToCart($event)" [disabled]="!product.inStock">
+    @if (!inCart) {
+      <button mat-raised-button color="primary" (click)="onAddToCart($event)" (keyup.enter)="onAddToCart($event)" tabindex="0" [disabled]="!product.inStock">
         Add to Cart
       </button>
-    </ng-container>
-
-    <ng-container *ngIf="inCart">
-      <div class="quantity-controller" (click)="$event.stopPropagation()">
+    }
+    @if (inCart) {
+      <div class="quantity-controller" role="group" tabindex="0" (click)="$event.stopPropagation()" (keyup.enter)="$event.stopPropagation()">
         <button mat-icon-button color="primary" (click)="updateQuantity($event, quantity - 1)" [disabled]="quantity <= 1">
           <mat-icon>remove</mat-icon>
         </button>
@@ -42,6 +49,6 @@
           Remove
         </button>
       </div>
-    </ng-container>
+    }
   </mat-card-actions>
 </mat-card>

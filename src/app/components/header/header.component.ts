@@ -1,6 +1,6 @@
 // header.component.ts
 // Displays the top toolbar with navigation and cart badge count.
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -11,6 +11,7 @@ import { CartService } from '../../services/cart.service';
 
 @Component({
     selector: 'app-header',
+    standalone: true,
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
     imports: [
@@ -23,12 +24,12 @@ import { CartService } from '../../services/cart.service';
     ]
 })
 export class HeaderComponent implements OnInit {
+  private cartService = inject(CartService);
+
   itemCount = 0;
 
-  constructor(private cartService: CartService) {}
-
   ngOnInit() {
-    this.cartService.cartItems$.subscribe(items => {
+    this.cartService.cartItems$.subscribe(() => {
       this.itemCount = this.cartService.getItemCount();
     });
   }

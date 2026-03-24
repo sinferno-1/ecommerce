@@ -22,13 +22,17 @@
       [matAutocomplete]="categoryAuto"
     />
     <mat-autocomplete #categoryAuto="matAutocomplete" autoActiveFirstOption>
-      <mat-option *ngFor="let category of filteredCategories" [value]="category">
-        {{ category }}
-      </mat-option>
+      @for (category of filteredCategories; track category) {
+        <mat-option [value]="category">
+          {{ category }}
+        </mat-option>
+      }
     </mat-autocomplete>
-    <mat-hint *ngIf="productForm.get('category')?.value && !categories.includes(productForm.get('category')?.value)">
-      New category will be added
-    </mat-hint>
+    @if (productForm.get('category')?.value && !categories.includes(productForm.get('category')?.value)) {
+      <mat-hint>
+        New category will be added
+      </mat-hint>
+    }
   </mat-form-field>
   <mat-form-field>
     <mat-label>Image URL</mat-label>

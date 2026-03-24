@@ -1,7 +1,7 @@
 // checkout.component.ts
 // Handles the checkout process and order success page. Uses a reactive
 // form for capturing user address details and shows summary of items.
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
@@ -15,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
     selector: 'app-checkout',
+    standalone: true,
     templateUrl: './checkout.component.html',
     styleUrls: ['./checkout.component.scss'],
     imports: [
@@ -30,6 +31,11 @@ import { MatDividerModule } from '@angular/material/divider';
     ]
 })
 export class CheckoutComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private cartService = inject(CartService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   checkoutForm: FormGroup;
   cartItems: CartItem[] = [];
   subtotal = 0;
@@ -38,12 +44,7 @@ export class CheckoutComponent implements OnInit {
   isSuccessPage = false;
   orderId: string | null = null;
 
-  constructor(
-    private fb: FormBuilder,
-    private cartService: CartService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor() {
     this.checkoutForm = this.fb.group({
       fullName: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^[6-9]\d{9}$/)]],

@@ -2,7 +2,7 @@
 // Manages the shopping cart state using a BehaviorSubject. Persists
 // the cart to localStorage so that it survives page reloads.
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Product } from './product.service';
 
 export interface CartItem {
@@ -31,7 +31,7 @@ export class CartService {
     if (storedCart) {
       try {
         this.cartItems.next(JSON.parse(storedCart));
-      } catch (e) {
+      } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
         // Clear corrupted data
         localStorage.removeItem('cart_v1');
       }
@@ -54,7 +54,7 @@ export class CartService {
    * @param product product being added
    * @param quantity number of units (default 1)
    */
-  addToCart(product: Product, quantity: number = 1) {
+  addToCart(product: Product, quantity = 1) {
     const currentItems = this.cartItems.value;
     const existingItem = currentItems.find(item => item.product.id === product.id);
     if (existingItem) {

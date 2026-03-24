@@ -2,10 +2,23 @@
 // API wrapper around Fake Store endpoints. Also handles in-memory
 // augmentation like currency conversion, tag generation and keeping
 // locally added products persisted in localStorage.
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+export interface RawProduct {
+  id: number;
+  title: string;
+  price: number;
+  description: string;
+  category: string;
+  image: string;
+  rating: {
+    rate: number;
+    count: number;
+  };
+}
 
 export interface Product {
   id: number;
@@ -32,17 +45,17 @@ export const USD_TO_INR = 83;
   providedIn: 'root'
 })
 export class ProductService {
+  private http = inject(HttpClient);
+
   // Base URL for fake store API
   private apiUrl = 'https://fakestoreapi.com/products';
-
-  constructor(private http: HttpClient) { }
 
   /**
    * Fetch all products from the API and merge with locally added
    * products stored in localStorage.
    */
   getProducts(): Observable<Product[]> {
-    return this.http.get<any[]>(this.apiUrl).pipe(
+    return this.http.get<RawProduct[]>(this.apiUrl).pipe(
       map(products => {
         const transformed = products.map(product => this.transformProduct(product));
         // merge any locally saved products
@@ -63,7 +76,7 @@ export class ProductService {
       return of(local);
     }
 
-    return this.http.get<any>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.get<RawProduct>(`${this.apiUrl}/${id}`).pipe(
       map(product => this.transformProduct(product))
     );
   }
@@ -76,7 +89,7 @@ export class ProductService {
   addProduct(product: Partial<Product>): Observable<Product> {
     // attempt to post to the API; if it fails we still create a local
     // product so the UI shows it immediately.
-    return this.http.post<any>(this.apiUrl, product).pipe(
+    return this.http.post<RawProduct>(this.apiUrl, product).pipe(
       map(p => {
         const transformed = this.transformProduct(p);
         this.saveLocalProduct(transformed);
@@ -95,7 +108,7 @@ export class ProductService {
     if (stored) {
       try {
         return JSON.parse(stored);
-      } catch (e) {
+      } catch (error) { // eslint-disable-line @typescript-eslint/no-unused-vars
         localStorage.removeItem(this.localCategoriesKey);
       }
     }
@@ -135,12 +148,12 @@ export class ProductService {
   }
 
   getProductsByCategory(category: string): Observable<Product[]> {
-    return this.http.get<any[]>(`https://fakestoreapi.com/products/category/${category}`).pipe(
+    return this.http.get<RawProduct[]>(`https://fakestoreapi.com/products/category/${category}`).pipe(
       map(products => products.map(product => this.transformProduct(product)))
     );
   }
 
-  private transformProduct(product: any): Product {
+  private transformProduct(product: RawProduct): Product {
     const priceInr = Math.round(product.price * USD_TO_INR);
     const mrp = Math.round(priceInr * 1.2); // Mock MRP as 20% higher
     const discount = Math.round(((mrp - priceInr) / mrp) * 100);
@@ -193,7 +206,7 @@ export class ProductService {
   }
 
   private mapCategory(apiCategory: string): string {
-    const categoryMap: { [key: string]: string } = {
+    const categoryMap: Record<string, string> = {
       'electronics': 'Tech',
       'jewelery': 'Fashion',
       "men's clothing": "Men's Fashion",

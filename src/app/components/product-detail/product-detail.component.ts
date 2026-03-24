@@ -1,7 +1,7 @@
 // product-detail.component.ts
 // Shows detailed information about a single product (PDP).
 // Includes quantity selector, related items and add-to-cart logic.
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, Product } from '../../services/product.service';
@@ -15,6 +15,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 
 @Component({
     selector: 'app-product-detail',
+    standalone: true,
     templateUrl: './product-detail.component.html',
     styleUrls: ['./product-detail.component.scss'],
     imports: [
@@ -28,18 +29,16 @@ import { ProductCardComponent } from '../product-card/product-card.component';
     ]
 })
 export class ProductDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private productService = inject(ProductService);
+  private cartService = inject(CartService);
+
   product: Product | null = null;
   relatedProducts: Product[] = [];
   loading = true;
   error: string | null = null;
   quantity = 1;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private productService: ProductService,
-    private cartService: CartService
-  ) {}
 
   /**
    * Retrieve product id from route parameters and load details on
@@ -65,7 +64,7 @@ export class ProductDetailComponent implements OnInit {
         this.loadRelatedProducts(product.category);
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Failed to load product. Please try again.';
         this.loading = false;
       }

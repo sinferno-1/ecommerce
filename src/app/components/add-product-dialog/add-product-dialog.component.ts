@@ -1,6 +1,6 @@
 // add-product-dialog.component.ts
 // Dialog used to collect details for a new product. Opened from PLP.
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -20,6 +20,7 @@ import { debounceTime, startWith, map } from 'rxjs/operators';
  */
 @Component({
     selector: 'app-add-product-dialog',
+    standalone: true,
     templateUrl: './add-product-dialog.component.html',
     styleUrls: ['./add-product-dialog.component.scss'],
     imports: [
@@ -30,19 +31,18 @@ import { debounceTime, startWith, map } from 'rxjs/operators';
         MatInputModule,
         MatButtonModule,
         MatAutocompleteModule
-    ],
-    standalone: true,
+    ]
 })
 export class AddProductDialogComponent implements OnInit {
+  private dialogRef = inject<MatDialogRef<AddProductDialogComponent>>(MatDialogRef);
+  private fb = inject(FormBuilder);
+  private productService = inject(ProductService);
+
   productForm: FormGroup;
   categories: string[] = [];
   filteredCategories: string[] = [];
 
-  constructor(
-    private dialogRef: MatDialogRef<AddProductDialogComponent>,
-    private fb: FormBuilder,
-    private productService: ProductService
-  ) {
+  constructor() {
     // build a simple form with required fields
     this.productForm = this.fb.group({
       title: ['', Validators.required],

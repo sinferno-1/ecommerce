@@ -1,82 +1,105 @@
-<div class="container" *ngIf="product">
-  <!-- detailed product view with image, info, and related items -->  <div *ngIf="loading" class="loading">
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
+@if (product) {
+  <div class="container">
+    <!-- detailed product view with image, info, and related items -->
+    @if (loading) {
+      <div class="loading">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </div>
+    }
 
-  <div *ngIf="error" class="error">
-    <p>{{ error }}</p>
-    <button mat-raised-button color="primary" (click)="ngOnInit()">Retry</button>
-  </div>
+    @if (error) {
+      <div class="error">
+        <p>{{ error }}</p>
+        <button mat-raised-button color="primary" (click)="ngOnInit()">Retry</button>
+      </div>
+    }
 
-  <div *ngIf="!loading && !error" class="product-detail">
-    <button mat-button (click)="goBack()">
-      <mat-icon>arrow_back</mat-icon>
-      Back to Products
-    </button>
+    @if (!loading && !error) {
+      <div class="product-detail">
+        <button mat-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Back to Products
+        </button>
 
-    <mat-card>
-      <mat-card-content>
-        <div class="product-content">
-          <div class="product-image">
-            <img [src]="product.image" [alt]="product.title" />
-            <div class="discount-badge" *ngIf="product.discount > 0">{{ product.discount }}% OFF</div>
-          </div>
-          <div class="product-info">
-            <h1>{{ product.title }}</h1>
-            <p class="category">{{ product.mappedCategory }}</p>
-            <div class="price-section">
-              <span class="price">₹{{ product.priceInr }}</span>
-              <span class="mrp" *ngIf="product.mrp > product.priceInr">₹{{ product.mrp }}</span>
-              <span class="discount" *ngIf="product.discount > 0">{{ product.discount }}% off</span>
-            </div>
-            <div class="rating">
-              <mat-icon>star</mat-icon>
-              <span>{{ product.rating.rate }} ({{ product.rating.count }} reviews)</span>
-            </div>
-            <div class="tags" *ngIf="product.tags.length > 0">
-              <mat-chip *ngFor="let tag of product.tags" [color]="getTagColor(tag)" selected>{{ tag }}</mat-chip>
-            </div>
-            <div class="delivery-info">
-              <p><mat-icon>local_shipping</mat-icon> Delivery by tomorrow</p>
-              <p><mat-icon>undo</mat-icon> 7 days return policy</p>
-            </div>
-            <div class="quantity-section">
-              <span>Quantity:</span>
-              <div class="quantity-controls">
-                <button mat-icon-button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
-                  <mat-icon>remove</mat-icon>
+        <mat-card>
+          <mat-card-content>
+            <div class="product-content">
+              <div class="product-image">
+                <img [src]="product.image" [alt]="product.title" />
+                @if (product.discount > 0) {
+                  <div class="discount-badge">{{ product.discount }}% OFF</div>
+                }
+              </div>
+              <div class="product-info">
+                <h1>{{ product.title }}</h1>
+                <p class="category">{{ product.mappedCategory }}</p>
+                <div class="price-section">
+                  <span class="price">₹{{ product.priceInr }}</span>
+                  @if (product.mrp > product.priceInr) {
+                    <span class="mrp">₹{{ product.mrp }}</span>
+                  }
+                  @if (product.discount > 0) {
+                    <span class="discount">{{ product.discount }}% off</span>
+                  }
+                </div>
+                <div class="rating">
+                  <mat-icon>star</mat-icon>
+                  <span>{{ product.rating.rate }} ({{ product.rating.count }} reviews)</span>
+                </div>
+                @if (product.tags.length > 0) {
+                  <div class="tags">
+                    @for (tag of product.tags; track tag) {
+                      <mat-chip [color]="getTagColor(tag)" selected>{{ tag }}</mat-chip>
+                    }
+                  </div>
+                }
+                <div class="delivery-info">
+                  <p><mat-icon>local_shipping</mat-icon> Delivery by tomorrow</p>
+                  <p><mat-icon>undo</mat-icon> 7 days return policy</p>
+                </div>
+                <div class="quantity-section">
+                  <span>Quantity:</span>
+                  <div class="quantity-controls">
+                    <button mat-icon-button (click)="decreaseQuantity()" [disabled]="quantity <= 1">
+                      <mat-icon>remove</mat-icon>
+                    </button>
+                    <span>{{ quantity }}</span>
+                    <button mat-icon-button (click)="increaseQuantity()" [disabled]="quantity >= 5">
+                      <mat-icon>add</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <button mat-raised-button color="primary" (click)="addToCart()" [disabled]="!product.inStock">
+                  <mat-icon>add_shopping_cart</mat-icon>
+                  Add to Cart
                 </button>
-                <span>{{ quantity }}</span>
-                <button mat-icon-button (click)="increaseQuantity()" [disabled]="quantity >= 5">
-                  <mat-icon>add</mat-icon>
-                </button>
+                <p class="stock-status" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
+                  {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
+                </p>
               </div>
             </div>
-            <button mat-raised-button color="primary" (click)="addToCart()" [disabled]="!product.inStock">
-              <mat-icon>add_shopping_cart</mat-icon>
-              Add to Cart
-            </button>
-            <p class="stock-status" [class.in-stock]="product.inStock" [class.out-of-stock]="!product.inStock">
-              {{ product.inStock ? 'In Stock' : 'Out of Stock' }}
-            </p>
-          </div>
-        </div>
-        <div class="description">
-          <h3>Description</h3>
-          <p>{{ product.description }}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+            <div class="description">
+              <h3>Description</h3>
+              <p>{{ product.description }}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-    <div class="related-products" *ngIf="relatedProducts.length > 0">
-      <h2>Related Products</h2>
-      <div class="related-grid">
-        <app-product-card
-          *ngFor="let relatedProduct of relatedProducts"
-          [product]="relatedProduct"
-          (addToCart)="addToCart()">
-        </app-product-card>
+        @if (relatedProducts.length > 0) {
+          <div class="related-products">
+            <h2>Related Products</h2>
+            <div class="related-grid">
+              @for (relatedProduct of relatedProducts; track relatedProduct.id) {
+                <app-product-card
+                  [product]="relatedProduct"
+                  (addToCart)="addToCart()">
+                </app-product-card>
+              }
+            </div>
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
-</div>
+}
+

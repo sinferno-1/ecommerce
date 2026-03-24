@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 
@@ -11,7 +11,8 @@ import { CartService } from '../services/cart.service';
   providedIn: 'root'
 })
 export class CartGuard implements CanActivate {
-  constructor(private cartService: CartService, private router: Router) {}
+  private cartService = inject(CartService);
+  private router = inject(Router);
 
   canActivate(): boolean {
     if (this.cartService.getItemCount() > 0) {
